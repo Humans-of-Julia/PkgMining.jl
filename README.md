@@ -1,2 +1,3 @@
-# PkgMining.jl
-Mining Julia General Registry for Package info
+# PkgMining
+
+Mining Julia General Registry for Package info.
