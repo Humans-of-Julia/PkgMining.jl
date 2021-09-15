@@ -20,3 +20,8 @@ owners = [first(g.owner) => size(g, 1) for g in gd]
 length(filter(x -> last(x) ≥ 10, owners))/length(owners)
 
 sort!(owners, by = x -> last(x), rev = true)
+
+[size(df[df.owner .== owner, :], 1) for owner in df.owner]
+
+# Check total number of packages
+@info sum(unique(df, :owner).pkgs_owned) == size(df, 1)
