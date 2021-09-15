@@ -33,7 +33,6 @@ function pkg_mining()
                 info["name"],
                 uuid,
                 owner,
-                0,
                 firstversion,
                 lastversion,
                 pkg["repo"],
