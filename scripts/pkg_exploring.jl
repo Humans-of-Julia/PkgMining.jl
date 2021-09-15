@@ -1,9 +1,7 @@
 # This is just a playground file
 
-include("../src/PkgMining.jl")
-
 using DataFrames
-using .PkgMining
+using PkgMining
 
 df = pkg_mining()
 
