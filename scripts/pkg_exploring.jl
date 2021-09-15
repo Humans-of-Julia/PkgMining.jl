@@ -26,13 +26,13 @@ sort!(owners, by = x -> last(x), rev = true)
 [nrow(df[df.owner .== owner, :]) for owner in df.owner]
 
 # Create DataFrame with owner and the number of packages they own
-df_owned = combine(groupby(df, :owner), nrow => :pkgs_owned)
+df_owners = combine(groupby(df, :owner), nrow => :pkgs_owned)
 
-# Copy and extend the packages DataFrame to contain column with the number of packages
+# Copy and/or extend the packages DataFrame to contain column with the number of packages
 # owned by the onwer of that package
-df_copy = copy(df)
-
-transform(groupby(df_copy, :owner), :owner => length => :pkgs_owned)
+df_owners2 = combine(groupby(df, :owner), :owner, :owner => length => :pkgs_owned)
+df_owners3 = copy(df)
+transform(groupby(df_owners3, :owner), :owner => length => :pkgs_owned)
 
 # Check total number of packages
-@info sum(unique(df, :owner).pkgs_owned) == size(df, 1)
+@info sum(df_owners.pkgs_owned) == nrow(df)
