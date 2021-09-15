@@ -83,10 +83,24 @@ julia> nrow(df[df.owner .== "JuliaAudio", :]) # number of packages owned by Juli
 We can also build another DataFrame with the owners and the number of packages they own (Thanks to ).
 
 ```julia
-julia> df_owned = combine(groupby(df, :owner), nrow => :pkgs_owned);
+julia> df_owners = combine(groupby(df, :owner), nrow => :pkgs_owned)
+1772×2 DataFrame
+  Row │ owner                pkgs_owned 
+      │ String               Int64      
+──────┼─────────────────────────────────
+    1 │ JuliaBinaryWrappers         822
+    2 │ cite-architecture             7
+    3 │ trixi-framework               6
+    4 │ wsphillips                    3
+  ⋮   │          ⋮               ⋮
+ 1769 │ focusenergy                   1
+ 1770 │ chrisbrahms                   1
+ 1771 │ Datax-package                 1
+ 1772 │ ericproffitt                  1
+                       1764 rows omitted
 
-julia> sort(df_owned, :pkgs_owned, rev = true)[1:10, :]
-10×2 DataFrame
+julia> sort(df_owners, :pkgs_owned, rev = true)[1:15, :]
+15×2 DataFrame
  Row │ owner                  pkgs_owned 
      │ String                 Int64      
 ─────┼───────────────────────────────────
@@ -100,20 +114,30 @@ julia> sort(df_owned, :pkgs_owned, rev = true)[1:10, :]
    8 │ JuliaMath                      39
    9 │ JuliaSmoothOptimizers          37
   10 │ JuliaData                      31
+  11 │ tpapp                          30
+  12 │ queryverse                     29
+  13 │ tkf                            29
+  14 │ jump-dev                       29
+  15 │ JuliaAI                        27
 
-julia> nrow(df_owned[df_owned.pkgs_owned .≥ 10, :]) # number of owners of 10+ packages
+julia> nrow(df_owners[df_owners.pkgs_owned .≥ 10, :]) # number of owners of 10+ packages
 110
 
-julia> nrow(df_owned[df_owned.pkgs_owned .< 10, :]) # number of owners of less than 10 packages
+julia> nrow(df_owners[df_owners.pkgs_owned .< 10, :]) # number of owners of less than 10 packages
 1662
 
-julia> sum(df_owned[df_owned.pkgs_owned .≥ 10, :pkgs_owned]) # number of packages in the first group
+julia> sum(df_owners.pkgs_owned) # total number of packages from df_owners
+6371
+
+julia> sum(df_owners[df_owners.pkgs_owned .≥ 10, :pkgs_owned]) # number of packages in the first group
 2843
 
-julia> sum(df_owned[df_owned.pkgs_owned .< 10, :pkgs_owned]) # number of packages in the second group
+julia> sum(df_owners[df_owners.pkgs_owned .< 10, :pkgs_owned]) # number of packages in the second group
 3528
 ```
 
 ## To do (Contributions are welcome)
 
 * One plan is to query the repository to extract data such as number of stargazers and watchers, number of forks, number of projects, homepage, and so on. This doesn't need to be included in the DataFrame. We should provide a function that takes the package name and returns the info. The info is contained in `https://api.github.com/repos/[owner]/[package_name_with_dot_jl_if_needed]`. For example, checkout out [SciML/DifferentialEquations github info](https://api.github.com/repos/SciML/DifferentialEquations.jl).
+
+* Another idea is to read the General Registry directly from github, so it always picks up the latest version.
